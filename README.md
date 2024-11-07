@@ -3,6 +3,16 @@
 
 Use below script to create or delete cloudformation Stack
 
+#### Make sure your aws cli is set-up with proper permissions
+```
+root@ecfd0174b5ad:/cf-asg-lt# aws sts get-caller-identity
+{
+    "UserId": "AIDA23L***",
+    "Account": "74594****",
+    "Arn": "arn:aws:iam::7459****:user/cf-svc-***"
+}
+```
+
 ### Create Stack
 
 ```
