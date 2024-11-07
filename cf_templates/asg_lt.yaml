@@ -1,0 +1,38 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Create a Launch Template and Auto Scaling Group
+
+Parameters:
+  BaseName:
+    Type: String
+    Description: Name of the resource
+  InstanceCount:
+    Type: Number
+    Description: ASG Instances
+    Default: 1
+
+Resources:
+  LaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateName: !Sub "${Name}-LaunchTemplate"
+      LaunchTemplateData:
+        InstanceType: t3.micro
+        ImageId: ami-08160c764f6cfd484
+        TagSpecifications:
+          - ResourceType: instance
+            Tags:
+              - Key: Name
+                Value: !Sub "${Name}-Instance"
+
+  AutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: !Sub "${Name}-ASG"
+      MinSize: "1"
+      MaxSize: "3"
+      DesiredCapacity: !Ref InstanceCount
+      LaunchTemplate:
+        LaunchTemplateId: !Ref LaunchTemplate
+        Version: !GetAtt LaunchTemplate.LatestVersionNumber
+      VPCZoneIdentifier:
+        - subnet-0315671370e48f4db # me-central-1 default subnet
